@@ -18,40 +18,47 @@ yargs(hideBin(process.argv))
         type: "string",
       });
     },
-    addRepo,
+    (argv) => {
+      addRepo(argv.file);
+    },
   )
   .command(
-    "push <file>",
-    "Push file/files to repository",
+    "commit <message>",
+    "Commit a file to repository",
     (yargs) => {
-      yargs.positional("file", {
-        describe: "Files to push to the repository",
+      yargs.positional("message", {
+        describe: "Files to commit to the repository",
         type: "string",
       });
     },
+    (argv)=>{
+      commitRepo(argv.message);
+    },
+  )
+  .command(
+    "push",
+    "Push file/files to repository (s3)",
+     {},
     pushRepo,
   )
   .command(
-    "pull <file>",
-    "Pull file/files from the repository",
-    (yargs) => {
-      yargs.positional("file", {
-        describe: "Files to pull from repository",
-        type: "string",
-      });
-    },
+    "pull",
+    "Pull file/files from the repository (s3)",
+    {},
     pullRepo,
   )
   .command(
-    "revert <file>",
+    "revert <commitId>",
     "Revert change from the repository",
     (yargs) => {
-      yargs.positional("file", {
-        describe: "Files to add to the staging area",
+      yargs.positional("commitId", {
+        describe: "The commit ID to revert",
         type: "string",
       });
     },
-    revertRepo,
+    (argv) => {
+      revertRepo(argv.commitId)
+    },
   )
   .demandCommand(1, "You need atleast one command")
   .help().argv;
