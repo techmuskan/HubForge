@@ -1,0 +1,5 @@
+node_modules/
+.env
+.hub/
+backend/.hub/
+frontend/dist/
