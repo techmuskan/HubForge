@@ -1,7 +1,8 @@
-// Keep the development default aligned with backend/.env. Deployments should set VITE_API_URL.
-const API_URL = import.meta.env.VITE_API_URL || "http://localhost:3000";
+// Local development can use the backend fallback; deployed builds must provide a public API URL.
+const API_URL = import.meta.env.VITE_API_URL || (import.meta.env.DEV ? "http://localhost:3000" : "");
 
 async function request(path, options = {}) {
+  if (!API_URL) throw new Error("Service is not configured. Set VITE_API_URL in the frontend deployment settings.");
   const token = localStorage.getItem("token");
   const response = await fetch(`${API_URL}${path}`, {
     headers: { "Content-Type": "application/json", ...(token ? { Authorization: `Bearer ${token}` } : {}), ...options.headers },
@@ -13,6 +14,7 @@ async function request(path, options = {}) {
 }
 
 async function download(path) {
+  if (!API_URL) throw new Error("Service is not configured. Set VITE_API_URL in the frontend deployment settings.");
   const token = localStorage.getItem("token");
   const response = await fetch(`${API_URL}${path}`, { headers: token ? { Authorization: `Bearer ${token}` } : {} });
   if (!response.ok) {
