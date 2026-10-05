@@ -90,7 +90,7 @@ yargs(hideBin(process.argv))
       console.error("Unable to connect mongodb: ", err)
     )
 
-    app.use(cors({ origin: "*" }));
+    app.use(cors({ origin: process.env.FRONTEND_URL || "*" }));
 
     app.use("/", mainRouter);
 
@@ -98,7 +98,7 @@ yargs(hideBin(process.argv))
     const httpServer = http.createServer(app);
     const io = new Server(httpServer, {
       cors: {
-        origin: "*",
+        origin: process.env.FRONTEND_URL || "*",
         methods: ["GET", "POST"],
       },
     });
